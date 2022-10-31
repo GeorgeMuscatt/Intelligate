@@ -1,0 +1,59 @@
+---
+title: "Intelligate master script"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r Install and load packages}
+
+  if(!require(BiocManager)){install.packages("BiocManager")}
+  BiocManager::install(version = "3.14", update = F, ask = F) # Do you want to install from sources the package which needs compilation? no
+  if(!require(flowCore)){BiocManager::install("flowCore")}
+  if(!require(flowSpecs)){BiocManager::install("flowSpecs")}
+  if(!require(Biobase)){BiocManager::install("Biobase")}
+  library(flowCore)
+  library(flowSpecs)
+  library(Biobase)
+  if(!require(plyr)){install.packages("plyr")}
+  
+  if (!require("pacman")){install.packages("pacman")}
+  pacman::p_load(ellipse, gridExtra, here, mclust, tibble, tidyverse)
+  
+  # install.packages("cli")
+  
+  filter <- dplyr::filter
+
+```
+
+```{r Include core functions}
+
+  source("query_path.R")
+  source("import_data.R")
+  source("run_intelligate.R")
+
+```
+
+# Pre-processing
+
+```{r 1 Pre-processing}
+
+  ## 1. QUERY PATH TO .FCS DATA ##
+  filepath <- query_path()
+  
+```
+
+```{r 2 Pre-processing}
+
+  ## 2. IMPORT, PRE-PROCESS, AND TRANSFORM .FCS DATA ##
+  fs_df <- import_data(filepath = filepath)
+
+```
+
+# Intelligate
+
+```{r 3-9 Intelligate}
+
+  ellipses <- run_intelligate(fs_df = fs_df)
+
+```
